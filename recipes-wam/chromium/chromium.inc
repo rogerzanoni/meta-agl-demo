@@ -6,10 +6,10 @@ SECTION = "webos/apps"
 
 require chromium-common.inc
 
-DEPENDS = "virtual/gettext wayland wayland-native pixman freetype fontconfig openssl pango cairo icu libxkbcommon libexif dbus pciutils udev libcap alsa-lib virtual/egl elfutils-native libdrm atk gperf-native gconf bison-native xorgproto nss nspr curl nspr-native nss-native glib-2.0-native python-six-native python-beautifulsoup4-native python-lxml-native python-html5lib-native python-webencodings-native"
+DEPENDS = "virtual/gettext wayland wayland-native pixman freetype fontconfig openssl pango cairo icu libxkbcommon libexif dbus pciutils udev libcap alsa-lib virtual/egl elfutils-native libdrm atk gperf-native gconf bison-native xorgproto nss nspr curl nspr-native nss-native glib-2.0-native python-six-native python-beautifulsoup4-native python-lxml-native python-html5lib-native python-webencodings-native webos-wayland-extensions"
 
 # TODO(rzanoni)
-# check dependencies libwebosi18n webos-wayland-extensions luna-service2
+# check dependencies libwebosi18n luna-service2
 
 # Build for raspberrypi4
 # Mesa 19.1.1 uses xorgproto instead of xproto series.
