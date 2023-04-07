@@ -17,19 +17,7 @@ RDEPENDS:${PN} += "\
     "
 
 # TODO(jdapena): replace this with HTML5 apps.
-AGL_APPS = " \
-    html5-dashboard \
-    html5-launcher \
-    html5-homescreen \
-    html5-hvac \
-    html5-mediaplayer \
-    html5-mixer \
-    html5-settings \
-    html5-aquarium \
-    html5-youtube \
-    html5-jitsi \
-    html5-examples \
-    "
+AGL_APPS = ""
 
 RDEPENDS:${PN}:append = " \
     weston-ini-conf-landscape-no-activate \

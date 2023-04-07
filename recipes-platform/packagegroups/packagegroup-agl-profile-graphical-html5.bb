@@ -16,7 +16,7 @@ RDEPENDS:${PN} += "\
 "
 
 RDEPENDS:${PN} += "\
-    wam \
+    cef-wam \
     "
 
 RDEPENDS:profile-graphical-html5 = "${PN}"

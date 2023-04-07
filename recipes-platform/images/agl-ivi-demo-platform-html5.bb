@@ -7,3 +7,5 @@ DESCRIPTION = "Contains the web runtime and sample web apps"
 IMAGE_INSTALL:append = " \
     packagegroup-agl-demo-platform-html5 \
 "
+
+CLANGSDK = "1"

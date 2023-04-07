@@ -6,7 +6,7 @@ After=WebAppMgr.service dbus.service
 [Service]
 Type=simple
 ExecStartPre=sleep 5
-ExecStart=/usr/bin/WebAppMgr --appid=homescreen --app-install-dir=/usr/lib/wam_apps/html5-homescreen/
+ExecStart=/usr/share/cef-wam/cef-wam --use-views --user-data-dir="/home/%u/wamdata" --appid=homescreen --url=/usr/lib/wam_apps/html5-homescreen
 Restart=on-failure
 
 [Install]

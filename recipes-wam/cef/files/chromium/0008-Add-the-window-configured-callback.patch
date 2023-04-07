@@ -1,0 +1,70 @@
+From eeb96846492f5372b609bbb804f15ed2f6d71854 Mon Sep 17 00:00:00 2001
+From: Roger Zanoni <rzanoni@igalia.com>
+Date: Thu, 1 Jun 2023 14:12:59 +0200
+Subject: [PATCH 8/8] Add the window configured callback
+
+---
+ .../wayland/host/wayland_toplevel_window.cc   | 21 +++++++++++++++++++
+ .../wayland/host/wayland_toplevel_window.h    |  7 +++++++
+ 2 files changed, 28 insertions(+)
+
+diff --git a/ui/ozone/platform/wayland/host/wayland_toplevel_window.cc b/ui/ozone/platform/wayland/host/wayland_toplevel_window.cc
+index 68aebd357fdc2..450dfff91454a 100644
+--- a/ui/ozone/platform/wayland/host/wayland_toplevel_window.cc
++++ b/ui/ozone/platform/wayland/host/wayland_toplevel_window.cc
+@@ -113,6 +113,19 @@ bool WaylandToplevelWindow::CreateShellToplevel() {
+   return true;
+ }
+ 
++// static
++void WaylandToplevelWindow::RegisterWindowConfiguredCallback(
++    WindowConfiguredCallback cb) {
++  *GetWindowConfiguredCallback() = cb;
++}
++
++// static
++WaylandToplevelWindow::WindowConfiguredCallback* WaylandToplevelWindow::GetWindowConfiguredCallback() {
++  static base::NoDestructor<WindowConfiguredCallback>
++      callback;
++  return callback.get();
++}
++
+ void WaylandToplevelWindow::ApplyPendingBounds() {
+   if (has_pending_configures()) {
+     DCHECK(shell_toplevel_);
+@@ -586,6 +599,14 @@ void WaylandToplevelWindow::SetWindowGeometry(gfx::Rect bounds_dip) {
+ 
+ void WaylandToplevelWindow::AckConfigure(uint32_t serial) {
+   shell_toplevel()->AckConfigure(serial);
++
++  LOG(ERROR) << "WINDOW CONFIGURED" << app_id_;
++
++  auto* cb = GetWindowConfiguredCallback();
++  if (!cb->is_null()) {
++    LOG(ERROR) << "CALLING CALLBACK WITH " << app_id_;
++    cb->Run(app_id_);
++  }
+ }
+ 
+ void WaylandToplevelWindow::UpdateDecorations() {
+diff --git a/ui/ozone/platform/wayland/host/wayland_toplevel_window.h b/ui/ozone/platform/wayland/host/wayland_toplevel_window.h
+index 7bbaaf81303a7..f732803442dca 100644
+--- a/ui/ozone/platform/wayland/host/wayland_toplevel_window.h
++++ b/ui/ozone/platform/wayland/host/wayland_toplevel_window.h
+@@ -41,6 +41,13 @@ class WaylandToplevelWindow : public WaylandWindow,
+ 
+   ShellToplevelWrapper* shell_toplevel() const { return shell_toplevel_.get(); }
+ 
++  // Registers a callback that will be called each time a toplevel
++  // window is configured.
++  using WindowConfiguredCallback = base::RepeatingCallback<
++      void(const std::string& app_id)>;
++  static void RegisterWindowConfiguredCallback(WindowConfiguredCallback cb);
++  static WindowConfiguredCallback* GetWindowConfiguredCallback();
++
+   // Apply the bounds specified in the most recent configure event. This should
+   // be called after processing all pending events in the wayland connection.
+   void ApplyPendingBounds() override;
+-- 
+2.37.2
+
